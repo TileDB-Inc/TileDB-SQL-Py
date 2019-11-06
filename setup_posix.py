@@ -58,7 +58,12 @@ def get_config():
         static = True
         sys.argv.remove('--static')
 
-    libs = mysql_config("libs")
+    # libs = mysql_config("libs")
+    if enabled(options, 'embedded'):
+        libs = mysql_config("libmysqld-libs")
+    else:
+        libs = mysql_config("libs")
+
     library_dirs = [dequote(i[2:]) for i in libs if i.startswith('-L')]
     libraries = [dequote(i[2:]) for i in libs if i.startswith('-l')]
     extra_link_args = [x for x in libs if not x.startswith(('-l', '-L'))]
@@ -78,7 +83,7 @@ def get_config():
     if static:
         # properly handle mysql client libraries that are not called libmysqlclient
         client = None
-        CLIENT_LIST = ['mysqlclient', 'mysqlclient_r', 'mysqld', 'mariadb',
+        CLIENT_LIST = ['mysqlclient', 'mysqlclient_r', 'mysqld', 'mariadb', 'mariadbd',
                        'mariadbclient', 'perconaserverclient', 'perconaserverclient_r']
         for c in CLIENT_LIST:
             if c in libraries:
@@ -95,6 +100,8 @@ def get_config():
             libraries.remove(client)
 
     name = "mysqlclient"
+    if enabled(options, 'embedded'):
+        name = name + "-embedded"
     metadata['name'] = name
 
     define_macros = [
