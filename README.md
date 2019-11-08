@@ -2,16 +2,39 @@
 
 [![Build Status](https://secure.travis-ci.org/PyMySQL/mysqlclient-python.png)](http://travis-ci.org/PyMySQL/mysqlclient-python)
 
-This is a fork of [MySQLdb1](https://github.com/farcepest/MySQLdb1).
+This is a fork of [mysqlclient-python](https://github.com/PyMySQL/mysqlclient-python).
 
-This project adds Python 3 support and bug fixes.
-I hope this fork is merged back to MySQLdb1 like distribute was merged back to setuptools.
+This project is designed to be used with TileDB-SQL which is a reduced build of MariaDB with support for using
+the [MyTile](https://github.com/TileDB-Inc/TileDB-MariaDB) storage engine for accessing TileDB Arrays.
 
-## Install
+This is not meant to be used a general purpose MariaDB Client, it is only meant to be used with linking against
+the embedded version of MariaDB. This has been tested only with MariaDB 10.4 and the MyTile storage engine.
+
+# Install
+
+## Conda
+
+Conda packages will be available on conda forge soon.
+
+```
+conda install -c conda-forge tiledb-sql
+```
+
+## Pypi
+
+A pypi package will be build from conda using conda-press
+
+```
+pip install tiledb-sql
+```
+
+## Compiling From Source
 
 ### Prerequisites
 
-You may need to install the Python and MySQL development headers and libraries like so:
+You may need to install the Python development headers and compile MariaDB from source
+
+#### Python development headers
 
 * `sudo apt-get install python-dev default-libmysqlclient-dev`  # Debian / Ubuntu
 * `sudo yum install python-devel mysql-devel`  # Red Hat / CentOS
@@ -19,54 +42,28 @@ You may need to install the Python and MySQL development headers and libraries l
 
 On Windows, there are binary wheels you can install without MySQLConnector/C or MSVC.
 
-#### Note on Python 3 : if you are using python3 then you need to install python3-dev using the following command :
+#### Compiling MyTile
 
-`sudo apt-get install python3-dev` # debian / Ubuntu
+Please follow the [MyTile compilation instructions](https://docs.tiledb.com/developer/mariadb/installation)
 
-`sudo yum install python3-devel `  # Red Hat / CentOS
+### Building TileDB-SQL-Py package
 
-#### **Note about bug of MySQL Connector/C on macOS**
-
-See also: https://bugs.mysql.com/bug.php?id=86971
-
-Versions of MySQL Connector/C may have incorrect default configuration options that cause compilation errors when `mysqlclient-python` is installed.  (As of November 2017, this is known to be true for homebrew's `mysql-connector-c` and [official package](https://dev.mysql.com/downloads/connector/c/))
-
-Modification of `mysql_config` resolves these issues as follows.
-
-Change
+If you've installed mytile into `$HOME/mytile_server` simply build the python package with:
 
 ```
-# on macOS, on or about line 112:
-# Create options
-libs="-L$pkglibdir"
-libs="$libs -l "
+PATH="$HOME/mytile_server/bin:${PATH}" python setup.py build_ext --inplace
 ```
 
-to
+Now you can use it with
 
 ```
-# Create options
-libs="-L$pkglibdir"
-libs="$libs -lmysqlclient -lssl -lcrypto"
+import tiledb.sql
+import pandas
+db = tiledb.sql.connect(db="test")
+pd.read_sql(sql="select * from `s3://my_bucket/my_array`, con=db)
 ```
 
-An improper ssl configuration may also create issues; see, e.g, `brew info openssl` for details on macOS.
+# Documentation
 
-### Install from PyPI
-
-`pip install mysqlclient`
-
-NOTE: Wheels for Windows may be not released with source package. You should pin version
-in your `requirements.txt` to avoid trying to install newest source package.
-
-
-### Install from source
-
-1. Download source by `git clone` or [zipfile](https://github.com/PyMySQL/mysqlclient-python/archive/master.zip).
-2. Customize `site.cfg`
-3. `python setup.py install`
-
-### Documentation
-
-Documentation is hosted on [Read The Docs](https://mysqlclient.readthedocs.io/)
+Documentation is hosted on [TileDB Developer Docs](https://docs.tiledb.com/developer/api-usage/running-sql)
 

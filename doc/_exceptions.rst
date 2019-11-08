@@ -1,7 +1,7 @@
 _exceptions Module
 ========================
 
-.. automodule:: MySQLdb._exceptions
+.. automodule:: tiledb.sql._exceptions
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,7 +1,7 @@
 _mysql Module
 =============
 
-.. automodule:: MySQLdb._mysql
+.. automodule:: tiledb.sql._mysql
     :members:
     :undoc-members:
     :show-inheritance:

@@ -1,5 +1,5 @@
 """
-MySQLdb - A DB API v2.0 compatible interface to MySQL.
+TileDB SQL - A DB API v2.0 compatible interface to MySQL.
 
 This package is a wrapper around _mysql, which mostly implements the
 MySQL C API.
@@ -9,16 +9,16 @@ connect() -- connects to server
 See the C API specification and the MySQL documentation for more info
 on other items.
 
-For information on how MySQLdb handles type conversion, see the
-MySQLdb.converters module.
+For information on how TileDB SQL handles type conversion, see the
+tiledb.sql.converters module.
 """
 
-from MySQLdb.release import __version__, version_info, __author__
+from tiledb.sql.release import __version__, version_info, __author__
 
 from . import _mysql
 
 if version_info != _mysql.version_info:
-    raise ImportError("this is MySQLdb version %s, but _mysql is version %r" %
+    raise ImportError("this is tiledb.sql version %s, but _mysql is version %r" %
                       (version_info, _mysql.version_info))
 
 threadsafety = 1
@@ -26,9 +26,9 @@ apilevel = "2.0"
 paramstyle = "format"
 
 from ._mysql import *
-from MySQLdb.compat import PY2
-from MySQLdb.constants import FIELD_TYPE
-from MySQLdb.times import Date, Time, Timestamp, \
+from tiledb.sql.compat import PY2
+from tiledb.sql.constants import FIELD_TYPE
+from tiledb.sql.times import Date, Time, Timestamp, \
     DateFromTicks, TimeFromTicks, TimestampFromTicks
 
 try:
@@ -80,7 +80,7 @@ else:
 
 def Connect(*args, **kwargs):
     """Factory function for connections.Connection."""
-    from MySQLdb.connections import Connection
+    from tiledb.sql.connections import Connection
     return Connection(*args, **kwargs)
 
 connect = Connection = Connect
