@@ -4,9 +4,9 @@ import capabilities
 from datetime import timedelta
 from contextlib import closing
 import unittest
-import MySQLdb
-from MySQLdb.compat import unicode
-from MySQLdb import cursors
+import tiledb.sql
+from tiledb.sql.compat import unicode
+from tiledb.sql import cursors
 from configdb import connection_factory
 import warnings
 
@@ -14,9 +14,9 @@ import warnings
 warnings.filterwarnings('ignore')
 
 
-class test_MySQLdb(capabilities.DatabaseTest):
+class test_tiledb_sql(capabilities.DatabaseTest):
 
-    db_module = MySQLdb
+    db_module = tiledb.sql
     connect_args = ()
     connect_kwargs = dict(use_unicode=True, sql_mode="ANSI,STRICT_TRANS_TABLES,TRADITIONAL")
     create_table_extra = "ENGINE=INNODB CHARACTER SET UTF8"
@@ -131,7 +131,7 @@ class test_MySQLdb(capabilities.DatabaseTest):
             c.execute("drop table if exists test_MULTIPOLYGON")
 
     def test_bug_2671682(self):
-        from MySQLdb.constants import ER
+        from tiledb.sql.constants import ER
         try:
             self.cursor.execute("describe some_non_existent_table");
         except self.connection.ProgrammingError as msg:
@@ -155,7 +155,7 @@ class test_MySQLdb(capabilities.DatabaseTest):
         c = self.cursor
         try:
             c.execute("SELECT x FROM not_existing_table")
-        except MySQLdb.ProgrammingError as e:
+        except tiledb.sql.ProgrammingError as e:
             self.assertEqual(e.args[0], 1146)
             return
         self.fail("Should raise ProgrammingError")
@@ -171,7 +171,7 @@ class test_MySQLdb(capabilities.DatabaseTest):
 
             with closing(connection_factory(**kwargs)) as conn:
                 with closing(conn.cursor()) as c:
-                    c.execute('SELECT CHARSET(%s)', (MySQLdb.Binary(b'raw bytes'),))
+                    c.execute('SELECT CHARSET(%s)', (tiledb.sql.Binary(b'raw bytes'),))
                     self.assertEqual(c.fetchall()[0][0], 'binary' if binary_prefix else 'utf8')
                     # normal strings should not get prefix
                     c.execute('SELECT CHARSET(%s)', ('str',))
@@ -179,7 +179,7 @@ class test_MySQLdb(capabilities.DatabaseTest):
 
 
 if __name__ == '__main__':
-    if test_MySQLdb.leak_test:
+    if test_tiledb_sql.leak_test:
         import gc
         gc.enable()
         gc.set_debug(gc.DEBUG_LEAK)

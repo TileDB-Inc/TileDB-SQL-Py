@@ -1,7 +1,7 @@
-MySQLdb
-=======
+TileDB-SQL
+==========
 
 .. toctree::
    :maxdepth: 4
 
-   MySQLdb
+   tiledb.sql

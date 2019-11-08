@@ -1,5 +1,5 @@
 """
-This module implements connections for MySQLdb. Presently there is
+This module implements connections for TileDB SQL. Presently there is
 only one class: Connection. Others are unlikely. However, you might
 want to make your own subclasses. In most cases, you will probably
 override Connection.default_cursor with a non-standard Cursor class.
@@ -7,9 +7,9 @@ override Connection.default_cursor with a non-standard Cursor class.
 import re
 import sys
 
-from MySQLdb import cursors, _mysql
-from MySQLdb.compat import unicode, PY2
-from MySQLdb._exceptions import (
+from tiledb.sql import cursors, _mysql
+from tiledb.sql.compat import unicode, PY2
+from tiledb.sql._exceptions import (
     Warning, Error, InterfaceError, DataError,
     DatabaseError, OperationalError, IntegrityError, InternalError,
     NotSupportedError, ProgrammingError,
@@ -53,7 +53,7 @@ class Connection(_mysql.connection):
         :param str db:          alias of database, for backward compatibility
         :param int port:        TCP/IP port to connect to
         :param str unix_socket: location of unix_socket to use
-        :param dict conv:       conversion dictionary, see MySQLdb.converters
+        :param dict conv:       conversion dictionary, see tiledb.sql.converters
         :param int connect_timeout:
             number of seconds to wait before the connection attempt fails.
 
@@ -120,8 +120,8 @@ class Connection(_mysql.connection):
         There are a number of undocumented, non-standard methods. See the
         documentation for the MySQL C API for some hints on what they do.
         """
-        from MySQLdb.constants import CLIENT, FIELD_TYPE
-        from MySQLdb.converters import conversions, _bytes_or_str
+        from tiledb.sql.constants import CLIENT, FIELD_TYPE
+        from tiledb.sql.converters import conversions, _bytes_or_str
         from weakref import proxy
 
         kwargs2 = kwargs.copy()

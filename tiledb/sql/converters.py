@@ -1,11 +1,11 @@
-"""MySQLdb type conversion module
+"""TileDB SQL type conversion module
 
 This module handles all the type conversions for MySQL. If the default
 type conversions aren't what you need, you can make your own. The
 dictionary conversions maps some kind of type to a conversion function
 which returns the corresponding value:
 
-Key: FIELD_TYPE.* (from MySQLdb.constants)
+Key: FIELD_TYPE.* (from tiledb.sql.constants)
 
 Conversion function:
 
@@ -32,11 +32,11 @@ MySQL.connect().
 """
 from decimal import Decimal
 
-from MySQLdb._mysql import string_literal, escape
-from MySQLdb.constants import FIELD_TYPE, FLAG
-from MySQLdb.times import *
-from MySQLdb.compat import PY2, long, unicode
-from MySQLdb._exceptions import ProgrammingError
+from tiledb.sql._mysql import string_literal, escape
+from tiledb.sql.constants import FIELD_TYPE, FLAG
+from tiledb.sql.times import *
+from tiledb.sql.compat import PY2, long, unicode
+from tiledb.sql._exceptions import ProgrammingError
 
 NoneType = type(None)
 
