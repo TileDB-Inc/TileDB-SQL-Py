@@ -34,8 +34,13 @@ from tiledb.sql.times import Date, Time, Timestamp, \
 import os
 module_path = os.path.dirname(os.path.realpath(__file__))
 
+import tempfile
+import shutil
+
+dirpath = tempfile.mkdtemp()
+
 # Init the embedded server on module load
-server_init(args=["--lc_messages_dir={}".format(module_path), "--language={}/".format(module_path)])
+server_init(args=["--lc_messages_dir={}".format(module_path), "--language={}/".format(module_path), "--datadir={}".format(dirpath)])
 
 try:
     frozenset
