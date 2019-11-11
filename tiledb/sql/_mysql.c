@@ -2825,12 +2825,8 @@ init_mysql(void)
 #endif
 
     if (!(dict = PyModule_GetDict(module))) goto error;
-    if (PyDict_SetItemString(dict, "version_info",
-                   PyRun_String(QUOTE(version_info), Py_eval_input,
-                       dict, dict)))
-        goto error;
-    if (PyDict_SetItemString(dict, "__version__",
-                   PyString_FromString(QUOTE(__version__))))
+    if (PyDict_SetItemString(dict, "version",
+                   PyString_FromString(QUOTE(version))))
         goto error;
     if (PyDict_SetItemString(dict, "connection",
                    (PyObject *)&_mysql_ConnectionObject_Type))
