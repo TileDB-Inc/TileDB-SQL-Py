@@ -3,7 +3,7 @@ from distutils.msvccompiler import get_build_version
 
 
 def get_config():
-    from setup_common import get_metadata_and_options, enabled, create_release_file
+    from setup_common import get_metadata_and_options, enabled
 
     metadata, options = get_metadata_and_options()
 
@@ -33,12 +33,6 @@ def get_config():
     name = "tiledb-sql"
     metadata['name'] = name
 
-    define_macros = [
-        ('version_info', metadata['version_info']),
-        ('__version__', metadata['version']),
-        ]
-    create_release_file(metadata)
-    del metadata['version_info']
     ext_options = dict(
         library_dirs = library_dirs,
         libraries = libraries,
@@ -46,7 +40,6 @@ def get_config():
         extra_link_args = extra_link_args,
         include_dirs = include_dirs,
         extra_objects = extra_objects,
-        define_macros = define_macros,
     )
     return metadata, ext_options
 
