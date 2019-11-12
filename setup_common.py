@@ -15,6 +15,13 @@ def get_metadata_and_options():
     metadata['py_modules'] = list(filter(None, metadata['py_modules'].split('\n')))
     metadata['classifiers'] = list(filter(None, metadata['classifiers'].split('\n')))
 
+    metadata['use_setuptools_scm'] = True
+    metadata['use_scm_version'] = {
+        'version_scheme': 'guess-next-dev',
+        'local_scheme': 'dirty-tag',
+        'write_to': 'tiledb/sql/version.py'
+    }
+    metadata['setup_requires'] = ['setuptools_scm>=1.5.4']
     return metadata, options
 
 def enabled(options, option):
@@ -26,12 +33,3 @@ def enabled(options, option):
         return False
     else:
         raise ValueError("Unknown value %s for option %s" % (value, option))
-
-def create_release_file(metadata):
-    rel = open("tiledb/sql/release.py",'w')
-    rel.write("""
-__author__ = "%(author)s <%(author_email)s>"
-version_info = %(version_info)s
-__version__ = "%(version)s"
-""" % metadata)
-    rel.close()

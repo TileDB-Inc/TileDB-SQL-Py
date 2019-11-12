@@ -96,7 +96,9 @@ typedef struct {
 extern PyTypeObject _mysql_ResultObject_Type;
 
 static int _mysql_server_init_done = 0;
-#define check_server_init(x) if (!_mysql_server_init_done) { if (mysql_server_init(0, NULL, NULL)) { _mysql_Exception(NULL); return x; } else { _mysql_server_init_done = 1;} }
+char **server_options;
+int items = 0;
+#define check_server_init(x) if (!_mysql_server_init_done) { if (mysql_server_init(items, server_options, NULL)) { _mysql_Exception(NULL); return x; } else { _mysql_server_init_done = 1;} }
 
 PyObject *
 _mysql_Exception(_mysql_ConnectionObject *c)
@@ -304,6 +306,10 @@ static PyObject *_mysql_server_init(
 		}
 		groups_c[groupc] = (char *)NULL;
 	}
+
+	// Save options globally incase of server reinit
+	server_options = cmd_args_c;
+	items = (sizeof(server_options) / sizeof(char *)) - 1;
 	/* even though this may block, don't give up the interpreter lock
 	   so that the server can't be initialized multiple times. */
 	if (mysql_server_init(cmd_argc, cmd_args_c, groups_c)) {
@@ -2800,15 +2806,6 @@ init_mysql(void)
 {
     PyObject *dict, *module, *emod, *edict;
 
-    if (mysql_library_init(0, NULL, NULL)) {
-        PyErr_SetString(PyExc_ImportError, "_mysql: mysql_library_init failed");
-#ifdef IS_PY3K
-        return NULL;
-#else
-        return;
-#endif
-    }
-
 #ifdef IS_PY3K
     if (PyType_Ready(&_mysql_ConnectionObject_Type) < 0)
         return NULL;
@@ -2828,12 +2825,8 @@ init_mysql(void)
 #endif
 
     if (!(dict = PyModule_GetDict(module))) goto error;
-    if (PyDict_SetItemString(dict, "version_info",
-                   PyRun_String(QUOTE(version_info), Py_eval_input,
-                       dict, dict)))
-        goto error;
-    if (PyDict_SetItemString(dict, "__version__",
-                   PyString_FromString(QUOTE(__version__))))
+    if (PyDict_SetItemString(dict, "version",
+                   PyString_FromString(QUOTE(version))))
         goto error;
     if (PyDict_SetItemString(dict, "connection",
                    (PyObject *)&_mysql_ConnectionObject_Type))

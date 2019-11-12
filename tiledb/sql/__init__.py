@@ -13,13 +13,9 @@ For information on how TileDB SQL handles type conversion, see the
 tiledb.sql.converters module.
 """
 
-from tiledb.sql.release import __version__, version_info, __author__
+from tiledb.sql.version import version
 
 from . import _mysql
-
-if version_info != _mysql.version_info:
-    raise ImportError("this is tiledb.sql version %s, but _mysql is version %r" %
-                      (version_info, _mysql.version_info))
 
 threadsafety = 1
 apilevel = "2.0"
@@ -30,6 +26,19 @@ from tiledb.sql.compat import PY2
 from tiledb.sql.constants import FIELD_TYPE
 from tiledb.sql.times import Date, Time, Timestamp, \
     DateFromTicks, TimeFromTicks, TimestampFromTicks
+
+import os
+module_path = os.path.dirname(os.path.realpath(__file__))
+
+import tempfile
+import shutil
+
+dirpath = tempfile.mkdtemp()
+
+os.mkdir(os.path.join(dirpath, 'test'))
+
+# Init the embedded server on module load
+server_init(args=["--lc_messages_dir={}".format(module_path), "--language={}/".format(module_path), "--datadir={}".format(dirpath)])
 
 try:
     frozenset
@@ -94,5 +103,5 @@ __all__ = [ 'BINARY', 'Binary', 'Connect', 'Connection', 'DATE',
     'TIMESTAMP', 'Warning', 'apilevel', 'connect', 'connections',
     'constants', 'converters', 'cursors', 'debug', 'escape',
     'escape_string', 'get_client_info',
-    'paramstyle', 'string_literal', 'threadsafety', 'version_info']
+    'paramstyle', 'string_literal', 'threadsafety', 'version']
 
