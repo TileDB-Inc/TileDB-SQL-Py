@@ -2,6 +2,7 @@
 
 import os
 import io
+import sys
 
 import setuptools
 
@@ -34,5 +35,16 @@ metadata['include_package_data'] = True
 metadata['zip_safe'] = False
 
 metadata['install_requires'] = ['setuptools-scm']
+
+PREFIX = None
+args = sys.argv[:]
+for arg in args:
+  if arg.find('--prefix=') == 0:
+    PREFIX = os.path.expanduser(arg.split('=')[1])
+    sys.argv.remove(arg)
+
+if not sys.platform == 'win32':
+  if PREFIX:
+    metadata['runtime_library_dirs'] = [PREFIX]
 
 setuptools.setup(**metadata)
