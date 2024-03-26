@@ -29,7 +29,7 @@ PERFORMANCE OF THIS SOFTWARE.
 #ifdef HAVE_MYSQL_MYSQL_H
 #include <mysql/mysql.h>
 #else
-#include <mysql.h>
+#include "mysql.h"
 #endif
 
 #ifdef HAVE_MYSQL_MYSQLD_ERROR_H
