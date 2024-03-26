@@ -26,16 +26,22 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 */
 
-#ifdef HAVE_MYSQL_MYSQL_H
+#if __has_include(<mysql/mysql.h>)
 #include <mysql/mysql.h>
 #else
 #include "mysql.h"
 #endif
 
-#ifdef HAVE_MYSQL_MYSQLD_ERROR_H
+#if __has_include(<mysql/mysqld_error.h>)
 #include <mysql/mysqld_error.h>
 #else
 #include "mysqld_error.h"
+#endif
+
+#if __has_include(<mysql/errmsg.h>)
+#include <mysql/errmsg.h>
+#else
+#include "errmsg.h"
 #endif
 
 #if MYSQL_VERSION_ID >= 80000
@@ -60,12 +66,6 @@ PERFORMANCE OF THIS SOFTWARE.
 
 #include "bytesobject.h"
 #include "structmember.h"
-
-#ifdef HAVE_MYSQL_ERRMSG_H
-#include <mysql/errmsg.h>
-#else
-#include "errmsg.h"
-#endif
 
 #define MyAlloc(s,t) (s *) t.tp_alloc(&t,0)
 #define MyFree(o) Py_TYPE(o)->tp_free((PyObject*)o)
