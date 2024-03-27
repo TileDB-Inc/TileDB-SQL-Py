@@ -26,8 +26,23 @@ OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
 PERFORMANCE OF THIS SOFTWARE.
 */
 
+#if __has_include(<mysql/mysql.h>)
+#include <mysql/mysql.h>
+#else
 #include "mysql.h"
+#endif
+
+#if __has_include(<mysql/mysqld_error.h>)
+#include <mysql/mysqld_error.h>
+#else
 #include "mysqld_error.h"
+#endif
+
+#if __has_include(<mysql/errmsg.h>)
+#include <mysql/errmsg.h>
+#else
+#include "errmsg.h"
+#endif
 
 #if MYSQL_VERSION_ID >= 80000
 // https://github.com/mysql/mysql-server/commit/eb821c023cedc029ca0b06456dfae365106bee84
@@ -51,7 +66,6 @@ PERFORMANCE OF THIS SOFTWARE.
 
 #include "bytesobject.h"
 #include "structmember.h"
-#include "errmsg.h"
 
 #define MyAlloc(s,t) (s *) t.tp_alloc(&t,0)
 #define MyFree(o) Py_TYPE(o)->tp_free((PyObject*)o)
